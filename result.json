@@ -3,11 +3,11 @@
       "name": "応用情報技術者試験 (AP)",
       "am": {
          "qs": {
-            "qs": "2024r06h_ap_am_qs.pdf",
+            "name": "2024r06h_ap_am_qs.pdf",
             "link": "https://www.ipa.go.jp/shiken/mondai-kaiotu/m42obm000000afqx-att/2024r06h_ap_am_qs.pdf"
          },
          "ans": {
-            "ans": "2024r06h_ap_am_ans.pdf",
+            "name": "2024r06h_ap_am_ans.pdf",
             "link": "https://www.ipa.go.jp/shiken/mondai-kaiotu/m42obm000000afqx-att/2024r06h_ap_am_ans.pdf"
          }
       }
@@ -16,11 +16,11 @@
       "name": "ITストラテジスト試験 (ST)",
       "am1": {
          "qs": {
-            "qs": "2024r06h_koudo_am1_qs.pdf",
+            "name": "2024r06h_koudo_am1_qs.pdf",
             "link": "https://www.ipa.go.jp/shiken/mondai-kaiotu/m42obm000000afqx-att/2024r06h_koudo_am1_qs.pdf"
          },
          "ans": {
-            "ans": "2024r06h_koudo_am1_ans.pdf",
+            "name": "2024r06h_koudo_am1_ans.pdf",
             "link": "https://www.ipa.go.jp/shiken/mondai-kaiotu/m42obm000000afqx-att/2024r06h_koudo_am1_ans.pdf"
          }
       }
@@ -29,11 +29,11 @@
       "name": "ITストラテジスト試験 (ST)",
       "am2": {
          "qs": {
-            "qs": "2024r06h_st_am2_qs.pdf",
+            "name": "2024r06h_st_am2_qs.pdf",
             "link": "https://www.ipa.go.jp/shiken/mondai-kaiotu/m42obm000000afqx-att/2024r06h_st_am2_qs.pdf"
          },
          "ans": {
-            "ans": "2024r06h_st_am2_ans.pdf",
+            "name": "2024r06h_st_am2_ans.pdf",
             "link": "https://www.ipa.go.jp/shiken/mondai-kaiotu/m42obm000000afqx-att/2024r06h_st_am2_ans.pdf"
          }
       }
@@ -42,11 +42,11 @@
       "name": "システムアーキテクト試験 (SA)",
       "am2": {
          "qs": {
-            "qs": "2024r06h_sa_am2_qs.pdf",
+            "name": "2024r06h_sa_am2_qs.pdf",
             "link": "https://www.ipa.go.jp/shiken/mondai-kaiotu/m42obm000000afqx-att/2024r06h_sa_am2_qs.pdf"
          },
          "ans": {
-            "ans": "2024r06h_sa_am2_ans.pdf",
+            "name": "2024r06h_sa_am2_ans.pdf",
             "link": "https://www.ipa.go.jp/shiken/mondai-kaiotu/m42obm000000afqx-att/2024r06h_sa_am2_ans.pdf"
          }
       }
@@ -55,11 +55,11 @@
       "name": "ネットワークスペシャリスト試験 (NW)",
       "am2": {
          "qs": {
-            "qs": "2024r06h_nw_am2_qs.pdf",
+            "name": "2024r06h_nw_am2_qs.pdf",
             "link": "https://www.ipa.go.jp/shiken/mondai-kaiotu/m42obm000000afqx-att/2024r06h_nw_am2_qs.pdf"
          },
          "ans": {
-            "ans": "2024r06h_nw_am2_ans.pdf",
+            "name": "2024r06h_nw_am2_ans.pdf",
             "link": "https://www.ipa.go.jp/shiken/mondai-kaiotu/m42obm000000afqx-att/2024r06h_nw_am2_ans.pdf"
          }
       }
@@ -68,11 +68,11 @@
       "name": "ITサービスマネージャ試験 (SM)",
       "am2": {
          "qs": {
-            "qs": "2024r06h_sm_am2_qs.pdf",
+            "name": "2024r06h_sm_am2_qs.pdf",
             "link": "https://www.ipa.go.jp/shiken/mondai-kaiotu/m42obm000000afqx-att/2024r06h_sm_am2_qs.pdf"
          },
          "ans": {
-            "ans": "2024r06h_sm_am2_ans.pdf",
+            "name": "2024r06h_sm_am2_ans.pdf",
             "link": "https://www.ipa.go.jp/shiken/mondai-kaiotu/m42obm000000afqx-att/2024r06h_sm_am2_ans.pdf"
          }
       }
@@ -81,11 +81,11 @@
       "name": "情報処理安全確保支援士試験 (SC)",
       "am2": {
          "qs": {
-            "qs": "2024r06h_sc_am2_qs.pdf",
+            "name": "2024r06h_sc_am2_qs.pdf",
             "link": "https://www.ipa.go.jp/shiken/mondai-kaiotu/m42obm000000afqx-att/2024r06h_sc_am2_qs.pdf"
          },
          "ans": {
-            "ans": "2024r06h_sc_am2_ans.pdf",
+            "name": "2024r06h_sc_am2_ans.pdf",
             "link": "https://www.ipa.go.jp/shiken/mondai-kaiotu/m42obm000000afqx-att/2024r06h_sc_am2_ans.pdf"
          }
       }
