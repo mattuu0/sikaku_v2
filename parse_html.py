@@ -3,6 +3,9 @@ import re
 import os
 import json
 
+# 自作ライブラリ
+from converter import convert_time
+
 with open("./sample.html", "r", encoding="utf-8") as read_html:
     html_content = read_html.read()
 
@@ -81,15 +84,16 @@ for atag_elem in atag_elems:
 
             try:
                 # 名前を取得
-                result_json[split_names[1]
-                            ]["name"] = names_json[split_names[1]]
+                result_json[split_names[1]]["name"] = names_json[split_names[1]]
             except:
                 import traceback
                 traceback.print_exc()
 
         # 初期化
         if (time_tag not in result_json[split_names[1]]):
-            result_json[split_names[1]][time_tag] = {}
+            result_json[split_names[1]][time_tag] = {    
+                "timejp" : convert_time(time_tag)
+            }
 
         #回答かどうか
         data_key = split_names[-1].split(".")[0]
@@ -97,7 +101,7 @@ for atag_elem in atag_elems:
         # jsonに格納
         result_json[split_names[1]][time_tag][data_key] = {
             "name": file_name,
-            "link": href_url
+            "link": href_url,
         }
 
 # ファイルに書き込み
