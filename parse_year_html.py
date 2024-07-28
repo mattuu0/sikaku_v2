@@ -6,7 +6,53 @@ import json
 # 自作ライブラリ
 from converter import convert_time
 
-def parse_year_html(html_content:str):
+
+def parse_a(atag_elem) -> dict:
+    # URL取得
+    href_url = str(atag_elem.attrs['href'])
+
+    # ファイル名取得
+    file_name = str(href_url.split("/")[-1])
+
+    # ファイル名分割
+    split_names = file_name.split("_")
+
+    # html の場合戻る
+    if (os.path.splitext(split_names[-1])[-1] != ".pdf"):
+        return {
+            "success": False
+        }
+
+    # 3つ以下の場合戻る
+    if (len(split_names) < 3):
+        return {
+            "success": False
+        }
+
+    # 時間のタグ
+    time_tag = split_names[2]
+
+    # 午前かどうか
+    if ("am" in time_tag):
+        # 試験のタグ取得
+        siken_tag = split_names[1]
+
+        return {
+            "success": True,
+            "siken_tag": siken_tag,
+            "time_tag": time_tag,
+            "file_name": file_name,
+            "link" : "https://www.ipa.go.jp" + href_url
+        }
+
+    return {
+        "success": False
+    }
+
+def url_to_typetag(url: str) -> str:
+    return url.split("/")[-1].split("_")[-1].split(".")[0]
+
+def parse_year_html(html_content: str):
     # HTMLを解析
     soup = BeautifulSoup(html_content, 'html.parser')
 
@@ -33,14 +79,9 @@ def parse_year_html(html_content:str):
             # 小文字化
             key_tag = tag_data.lower()
 
-            # st の場合
-            if (key_tag in "st"):
-                names_json["koudo"] = content
-
             # jsonに格納
             names_json[key_tag] = content
 
-    print(names_json)
 
     # リンクを取得
     atag_elems = soup.find_all(href=re.compile(
@@ -49,62 +90,94 @@ def parse_year_html(html_content:str):
     # 結果
     result_json = {}
 
+    count = 0
     # リンクを表示
-    for atag_elem in atag_elems:
-        # URL取得
-        href_url = str(atag_elem.attrs['href'])
+    for i in range(len(atag_elems)):
+        try:
+            if (count >= len(atag_elems)):
+                break
 
-        # ファイル名取得
-        file_name = str(href_url.split("/")[-1])
+            # リンクを取得
+            atag_elem = atag_elems[count]
 
-        # ファイル名分割
-        split_names = file_name.split("_")
+            # parse
+            parse_data = dict(parse_a(atag_elem))
 
-        # html の場合戻る
-        if (os.path.splitext(split_names[-1])[-1] == ".html"):
-            continue
+            #成功しない場合
+            if (not parse_data["success"]):
+                count += 1
+                continue
+            
+            #koudo の時
+            if (parse_data["siken_tag"] == "koudo"):
+                #リンク取得
+                href = parse_data["link"]
 
-        # 3つ以下の場合戻る
-        if (len(split_names) < 3):
-            continue
+                # 問題か答えか
+                typetag = url_to_typetag(href)
 
-        # 時間のタグ
-        time_tag = split_names[2]
+                # 問題の時
+                if (typetag == "qs"):
+                    # 高度の答えを解析
+                    koudo_ans_parse = parse_a(atag_elems[count + 1])
 
-        # 午前かどうか
-        if ("am" in time_tag):
-            # キーが無い場合
-            if (split_names[1] not in result_json):
+                    # 試験の問題を解析
+                    siken_qs_parse = parse_a(atag_elems[count + 2])
 
-                # 作成
-                result_json[split_names[1]] = {}
+                    # 試験の答えを解析
+                    siken_ans_parse = parse_a(atag_elems[count + 3])
 
-                try:
-                    # 名前を取得
-                    result_json[split_names[1]]["name"] = names_json[split_names[1]]
-                except:
-                    import traceback
-                    traceback.print_exc()
+                    result_json[siken_qs_parse["siken_tag"]] = {
+                        parse_data["time_tag"] : {
+                            "qsname" : parse_data["file_name"],
+                            "qslink" : parse_data["link"],
+                            "ansname" : koudo_ans_parse["file_name"],
+                            "anslink" : koudo_ans_parse["link"],
+                        },
+                        siken_qs_parse["time_tag"] : {
+                            "qsname" : siken_qs_parse["file_name"],
+                            "qslink" : siken_qs_parse["link"],
+                            "ansname" : siken_ans_parse["file_name"],
+                            "anslink" : siken_ans_parse["link"],
+                        }
+                    }
 
-            # 初期化
-            if (time_tag not in result_json[split_names[1]]):
-                result_json[split_names[1]][time_tag] = {    
-                    "timejp" : convert_time(time_tag)
+                    #カウンタを進める
+                    count += 4
+                    continue
+            else:
+                # 試験の解答を解析
+                siken_ans_parse = parse_a(atag_elems[count + 1])
+
+                #jsonに格納
+                result_json[parse_data["siken_tag"]] = {
+                    parse_data["time_tag"] : {
+                        "qsname" : parse_data["file_name"],
+                        "qslink" : parse_data["link"],
+                        "ansname" : siken_ans_parse["file_name"],
+                        "anslink" : siken_ans_parse["link"],
+                    }
                 }
+        except:
+            import traceback
+            traceback.print_exc()
 
-            #回答かどうか
-            data_key = split_names[-1].split(".")[0]
+            continue
 
-            # jsonに格納
-            result_json[split_names[1]][time_tag][data_key] = {
-                "name": file_name,
-                "link": "https://www.ipa.go.jp" + href_url,
-            }
-
+        # カウンタを進める
+        count += 2
+    
     return result_json
 
-if __name__ == "__main__":    
+
+if __name__ == "__main__":
     with open("./htmls/2024.html", "r", encoding="utf-8") as read_html:
         read_content = read_html.read()
 
-    print(parse_year_html(read_content))
+    with open("./2024.json", "w", encoding="utf-8") as write_json:
+        parse_data = parse_year_html(read_content)
+
+        print(parse_data)
+
+        json.dump(parse_data,
+                  write_json, indent=3, ensure_ascii=False)

@@ -79,6 +79,9 @@ for atag_elem in atag_elems:
         # HTMLを取得
         html_content = request_html(href_url)
 
+        with open("./htmls/" + year_tag + ".html", "w", encoding="utf-8") as write_html:
+            write_html.write(html_content)
+
         # 年度をキーにしてJSONを追加
         result_json[year_tag] = parse_year_html(html_content)
 
