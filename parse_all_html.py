@@ -1,6 +1,7 @@
 import re
 import json
 import time
+import os
 
 # 外部 ライブラリ
 from fake_useragent import UserAgent
@@ -76,11 +77,18 @@ for atag_elem in atag_elems:
     year_tag = str(last_name[0:check_index])
 
     try:
-        # HTMLを取得
-        html_content = request_html(href_url)
+        # 年度HTMLの保存先
+        save_path = "./htmls/" + year_tag + ".html"
 
-        with open("./htmls/" + year_tag + ".html", "w", encoding="utf-8") as write_html:
-            write_html.write(html_content)
+        if os.path.exists(save_path):
+            # HTMLを取得
+            html_content = request_html(href_url)
+
+            with open(save_path, "w", encoding="utf-8") as write_html:
+                write_html.write(html_content)
+        else:
+            with open(save_path, "r", encoding="utf-8") as read_html:
+                html_content = read_html.read()
 
         # 年度をキーにしてJSONを追加
         result_json[year_tag] = parse_year_html(html_content)

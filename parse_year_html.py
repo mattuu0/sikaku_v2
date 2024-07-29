@@ -167,6 +167,7 @@ def parse_year_html(html_content: str):
         # カウンタを進める
         count += 2
     
+    result_json["tags"] = names_json
     return result_json
 
 
