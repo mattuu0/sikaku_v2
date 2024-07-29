@@ -67,7 +67,7 @@ def extract(pdf_path) -> list:
     return return_list
 
 #設定
-dl_dir = "./auto_dl"
+extract_path = "./datas"
 
 # json 読み込み
 with open("./result.json", "r", encoding="utf-8") as read_file:
@@ -76,9 +76,12 @@ with open("./result.json", "r", encoding="utf-8") as read_file:
 #時間のタグ
 time_tags = {}
 
+# データ辞書
+datas_dict = {}
+
 for key, value in tqdm(result_json.items()):
     # ディレクトリ名生成
-    dl_path = os.path.join(dl_dir, key)
+    dl_path = os.path.join(extract_path, key)
 
     # 試験を回す
     for siken_tag in tqdm(value.keys()):
@@ -122,10 +125,12 @@ for key, value in tqdm(result_json.items()):
                 
                 continue
 
-    # data.json を書き込む
-    with open(os.path.join(dl_path, "data.json"), "w", encoding="utf-8") as write_file:
-        json.dump({
-            "tags" : value["tags"],
-            "time_tags" : time_tags
-        }, write_file, ensure_ascii=False, indent=3)
 
+    # 結果を返す
+    datas_dict[key] = {
+        "time_tags": time_tags,
+        "tags": value["tags"]
+    }
+
+with open(os.path.join(extract_path, "datas.json"), "w", encoding="utf-8") as write_file:
+    json.dump(datas_dict, write_file, ensure_ascii=False, indent=3)

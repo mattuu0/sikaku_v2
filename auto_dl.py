@@ -4,7 +4,7 @@ import os
 import shutil
 import time
 
-dl_dir = "./auto_dl"
+dl_dir = "./datas"
 
 def ResetDir(path):
     try:
@@ -47,6 +47,10 @@ for key, value in result_json.items():
 
         # ディレクトリ作成
         ResetDir(siken_dir)
+
+        # tags の場合戻る
+        if (siken_tag == "tags"):
+            continue
 
         # 時間のタグ取得
         for time_tag in value[siken_tag].keys():
