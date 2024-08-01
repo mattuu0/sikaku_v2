@@ -76,7 +76,7 @@ async def siken_times(year:str,sikentag:str,time_tag:str):
         read_json = json.load(read_file)
     
     # 問題のリンクを設定
-    read_json["qslink"] = f"http://127.0.0.1:8000/qspdf/{year}/{sikentag}/{time_tag}"
+    read_json["qslink"] = f"/qspdf/{year}/{sikentag}/{time_tag}"
 
     return read_json
 

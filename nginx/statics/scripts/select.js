@@ -51,7 +51,7 @@ async function Siken_Data(year) {
     // 試験一覧を全削除
     RemoveChildren(sikens_area);
 
-    const req = await fetch(`http://127.0.0.1:8000/sikens/${year}`,{
+    const req = await fetch(`/app/sikens/${year}`,{
         method: "GET",
     })
 
@@ -88,7 +88,7 @@ async function getTimes(year,sikentag,sikenName) {
     siken_name.innerText = `試験名 : ${year}年度 : ${sikenName}`;
 
     // リクエスト送信
-    const req = await fetch(`http://127.0.0.1:8000/times/${year}/${sikentag}`,{
+    const req = await fetch(`/app/times/${year}/${sikentag}`,{
         method: "GET",
     })
 
@@ -114,7 +114,7 @@ async function getTimes(year,sikentag,sikenName) {
 }
 
 async function GetSiken(year,sikentag,sikenName,time_tag,timeName) {
-    const req = await fetch(`http://127.0.0.1:8000/siken/${year}/${sikentag}/${time_tag}`,{
+    const req = await fetch(`/app/siken/${year}/${sikentag}/${time_tag}`,{
         method: "GET",
     })
 
@@ -131,7 +131,7 @@ async function main() {
     RemoveChildren(year_buttons);
 
     // リクエスト送信
-    const req = await fetch("http://127.0.0.1:8000/years",{
+    const req = await fetch("/app/years",{
         method: "GET",
     });
 
