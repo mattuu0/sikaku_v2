@@ -103,7 +103,7 @@ async function getTimes(year,sikentag,sikenName) {
         abtn.innerText = res[time_tag];
 
         abtn.addEventListener('click',async () => {
-            await GetSiken(year,sikentag,sikenName,time_tag);
+            await GetSiken(year,sikentag,sikenName,time_tag,res[time_tag]);
         })
 
         // 試験を追加
@@ -113,7 +113,7 @@ async function getTimes(year,sikentag,sikenName) {
     Show_times();
 }
 
-async function GetSiken(year,sikentag,sikenName,time_tag) {
+async function GetSiken(year,sikentag,sikenName,time_tag,timeName) {
     const req = await fetch(`http://127.0.0.1:8000/siken/${year}/${sikentag}/${time_tag}`,{
         method: "GET",
     })
@@ -123,7 +123,7 @@ async function GetSiken(year,sikentag,sikenName,time_tag) {
     console.log(res);
 
     //問題を表示する
-    show_mondai(year,sikentag,sikenName,time_tag,res["data"],res["qslink"]);
+    show_mondai(year,sikentag,sikenName,time_tag,timeName,res["data"],res["qslink"]);
 }
 
 async function main() {

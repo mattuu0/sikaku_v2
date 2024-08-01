@@ -21,7 +21,7 @@ const total_siken_name = document.getElementById('total_siken_name');
 //答えの情報保持
 let kotae_data = {};
 
-function show_mondai(year,sikentag,sikenName,timetag,data, qslink) {
+function show_mondai(year,sikentag,sikenName,timetag,timeName,data, qslink) {
     //確認を表示する
     const clear_confirm = window.confirm("新しい問題を読み込むとあなたの回答が消去されます。\nよろしいですか？");
     if (!clear_confirm) {
@@ -52,13 +52,16 @@ function show_mondai(year,sikentag,sikenName,timetag,data, qslink) {
 
         // 模範解答のselect id 生成
         const mohan_selectid = `mohan_select_${kaitou_data["num"]}`;
+        
+        // 解答欄のcheckbox id 生成
+        const checkboxid = `kaitou_check_${kaitou_data["num"]}`;
 
         //解答欄を生成
         kaitou_tbody.insertAdjacentHTML('beforeend', `
             <tr class="kaitou_row" id=${kaitou_trid}>
                 <th scope="row">${kaitou_data["num"]}</th>
                 <td class="minaosi_area">
-                    <input type="checkbox" class="minaosi_check">
+                    <input type="checkbox" class="minaosi_check" id=${checkboxid}>
                 </td>
                 <td>
                     <select name="" id=${kaitouid} class="kaitou_select form-select form-select-lg">
@@ -83,7 +86,7 @@ function show_mondai(year,sikentag,sikenName,timetag,data, qslink) {
 
     console.log(qslink);
 
-    total_siken_name.textContent = `${year}年度 ${sikenName}試験 ${timetag}問題`;
+    total_siken_name.textContent = `${year}年度 ${sikenName}試験 ${timeName}問題`;
 
     // コントロールを表示
     Show_Conrtols();
@@ -99,7 +102,13 @@ Open_mondai.addEventListener('click', async () => {
     window.open(last_qslink, 'mondai_window');
 })
 
+// レポート用のデータ
+let report_data = {};
+
 kaitou_button.addEventListener('click', async () => {
+    //レポート用のデータを初期化
+    report_data = {};
+
     for (const key of Object.keys(kotae_data)) {
         const kaitou_data = kotae_data[key];
 
@@ -129,17 +138,37 @@ kaitou_button.addEventListener('click', async () => {
         // 模範解答の select を取得
         const mohan_select = document.getElementById(mohan_selectid);
 
+
+        // 解答欄のcheckbox id 生成
+        const checkboxid = `kaitou_check_${kaitou_data["num"]}`;
+
+        // 解答欄のcheckboxを取得
+        const checkbox = document.getElementById(checkboxid);
+
         // クラスを削除する
         kaitou_tr.classList.remove("table-danger");
         kaitou_tr.classList.remove("table-success");
 
+
+        // レポートデータに追加
+        report_data[kaitou_data["num"]] = {
+            "kaitou": ReverseAns(kaitou.value),
+            "mohan": kaitou_data["ans"],
+            "ischecked": checkbox.checked,
+        }
+
+        //正解しているか判定
         if (kaitou.value == mohan_converted) {
             //正解
             kaitou_tr.classList.add("table-success");
+            report_data[kaitou_data["num"]]["tabletag"] = "table-success";
         } else {
             //不正解
             kaitou_tr.classList.add("table-danger");
+            report_data[kaitou_data["num"]]["tabletag"] = "table-danger";
         }
+
+        // 模範解答を設定
 
         // 答えを設定
         mohan_select.value = mohan_converted;

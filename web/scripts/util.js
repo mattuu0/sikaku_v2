@@ -18,3 +18,20 @@ function ConvertAns(ans) {
             return "";
     }
 }
+
+function ReverseAns(ans) {
+    switch (ans) {
+        case "a":
+            return "ア";
+        case "i":
+            return "イ";
+        case "u":
+            return "ウ";
+        case "e":
+            return "エ";
+        case "none":
+            return "未選択";
+        default:
+            return "不明";
+    }
+}
