@@ -109,6 +109,14 @@ Open_mondai.addEventListener('click', async () => {
 let report_data = {};
 
 kaitou_button.addEventListener('click', async () => {
+    // 最終確認
+    const confirm = window.confirm("答え合わせをしますか?");
+
+    // いいえなら戻る
+    if (!confirm) {
+        return;
+    }
+
     //レポート用のデータを初期化
     report_data = {};
 
