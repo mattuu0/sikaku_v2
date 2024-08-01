@@ -15,10 +15,13 @@ const control_buttons = document.getElementById('control_buttons');
 //pdf viewer
 const pdfjs_iframe = document.getElementById('pdfjs-iframe');
 
+// 試験の名前を表示する
+const total_siken_name = document.getElementById('total_siken_name');
+
 //答えの情報保持
 let kotae_data = {};
 
-function show_mondai(data, qslink) {
+function show_mondai(year,sikentag,sikenName,timetag,data, qslink) {
     //確認を表示する
     const clear_confirm = window.confirm("新しい問題を読み込むとあなたの回答が消去されます。\nよろしいですか？");
     if (!clear_confirm) {
@@ -80,10 +83,10 @@ function show_mondai(data, qslink) {
 
     console.log(qslink);
 
-    // コントロールを表示
-    control_buttons.style.display = "";
+    total_siken_name.textContent = `${year}年度 ${sikenName}試験 ${timetag}問題`;
 
-    Open_mondai.click();
+    // コントロールを表示
+    Show_Conrtols();
 }
 
 Open_mondai.addEventListener('click', async () => {
@@ -91,11 +94,9 @@ Open_mondai.addEventListener('click', async () => {
         return;
     }
 
-    pdfjs_iframe.src = last_qslink;
-
     // pdfjs_iframe.src = "./pdfjs-4.5.136-dist/web/viewer.html?file=" + last_qslink;
     //問題のURLをポップアップ
-    // window.open(last_qslink, '_blank', 'width=700,height=1020');
+    window.open(last_qslink, 'mondai_window');
 })
 
 kaitou_button.addEventListener('click', async () => {

@@ -23,18 +23,28 @@ function Show_years() {
     years_container.style.display = "block";
     sikens_container.style.display = "none";
     times_container.style.display = "none";
+    control_buttons.style.display = "none";
 }
 
 function Show_sikens() {
     years_container.style.display = "none";
     sikens_container.style.display = "block";
     times_container.style.display = "none";
+    control_buttons.style.display = "none";
 }
 
 function Show_times() {
     years_container.style.display = "none";
     sikens_container.style.display = "none";
     times_container.style.display = "block";
+    control_buttons.style.display = "none";
+}
+
+function Show_Conrtols() {
+    years_container.style.display = "none";
+    sikens_container.style.display = "none";
+    times_container.style.display = "none";
+    control_buttons.style.display = "block";
 }
 
 async function Siken_Data(year) {
@@ -71,9 +81,6 @@ async function getTimes(year,sikentag,sikenName) {
     //問題のURL を削除
     last_qslink = "";
 
-    // こんとろーらーを隠す
-    control_buttons.style.display = "none";
-
     // 試験の時間を全削除
     RemoveChildren(times_area);
 
@@ -96,7 +103,7 @@ async function getTimes(year,sikentag,sikenName) {
         abtn.innerText = res[time_tag];
 
         abtn.addEventListener('click',async () => {
-            await GetSiken(year,sikentag,time_tag);
+            await GetSiken(year,sikentag,sikenName,time_tag);
         })
 
         // 試験を追加
@@ -106,7 +113,7 @@ async function getTimes(year,sikentag,sikenName) {
     Show_times();
 }
 
-async function GetSiken(year,sikentag,time_tag) {
+async function GetSiken(year,sikentag,sikenName,time_tag) {
     const req = await fetch(`http://127.0.0.1:8000/siken/${year}/${sikentag}/${time_tag}`,{
         method: "GET",
     })
@@ -116,7 +123,7 @@ async function GetSiken(year,sikentag,time_tag) {
     console.log(res);
 
     //問題を表示する
-    show_mondai(res["data"],res["qslink"]);
+    show_mondai(year,sikentag,sikenName,time_tag,res["data"],res["qslink"]);
 }
 
 async function main() {

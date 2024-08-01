@@ -13,8 +13,9 @@
 
 <body>
     <div style="display: flex; overflow: hidden;width: 100vw;height: 100vh;">
-        <div style="height: 100vh;width: 50%;overflow-y: scroll;" id="mondai_area">
+        <div style="height: 100vh;width: 100%;overflow-y: scroll;" id="mondai_area">
             <div id="years_container">
+                <a id="back_button" class="select_btn" onclick="init_settings()">初期設定</a>
                 <div id="year_buttons">
                 </div>
             </div>
@@ -26,21 +27,27 @@
             <div id="times_container" style="display: none;">
                 <a id="back_button" class="select_btn" onclick="Show_sikens()">戻る</a>
                 <a class="select_btn" id="siken_name"></a>
-                <div id="control_buttons">
-                    <a id="open_mondai_button" class="select_btn">問題を開く</a>
-                    <a id="kaitou_button" class="select_btn">答え合わせ</a>
-                </div>
                 <div id="times_area">
                 </div>
+            </div>
+
+            <div id="control_buttons" style="display: none;">
+                <div>
+                    <a id="back_button" class="select_btn" onclick="Show_times()">戻る</a>
+                    <a id="open_mondai_button" class="select_btn">問題を開く</a>
+                    <a id="kaitou_button" class="select_btn">答え合わせ</a>
+                    <a id="export_button" class="select_btn">レポート出力</a>
+                </div>
+                <h2 class="select_btn" id="total_siken_name"></h2>
             </div>
 
             <table class="table table-hover">
                 <thead>
                     <tr class="kaitou_row">
-                        <th scope="col" style="width: 10%;">問題番号</th>
-                        <th scope="col" class="minaosi_area">見直し</th>
-                        <th scope="col" style="width: 70%;">回答</th>
-                        <th scope="col" style="width: 20%;">模範解答</th>
+                        <th scope="col" style="width: 10%; min-width: 100px;">問題番号</th>
+                        <th scope="col" class="minaosi_area" style="min-width: 100px;">見直し</th>
+                        <th scope="col" style="width: 70%; min-width: 100px;">回答</th>
+                        <th scope="col" style="width: 20%; min-width: 100px;">模範解答</th>
                     </tr>
                 </thead>
                 <tbody id="kaitou_tbody">
@@ -48,13 +55,14 @@
                 </tbody>
             </table>
         </div>
-        <iframe title="pdfjs-default-viewer" id="pdfjs-iframe" src="./pdfjs-4.5.136-dist/web/viewer.html" style="height: 100vh; width: 50%;">
-        </iframe>
     </div>
 
+    <script src="./scripts/html2canvas.min.js"></script>
     <script src="./scripts/util.js"></script>
     <script src="./scripts/select.js"></script>
     <script src="./scripts/siken.js"></script>
+    <script src="./scripts/resize.js"></script>
+    <script src="./scripts/report.js"></script>
 </body>
 
 </html>
