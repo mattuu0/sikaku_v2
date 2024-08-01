@@ -12,6 +12,9 @@ const kaitou_button = document.getElementById('kaitou_button');
 // 管理ボタン
 const control_buttons = document.getElementById('control_buttons');
 
+//pdf viewer
+const pdfjs_iframe = document.getElementById('pdfjs-iframe');
+
 //答えの情報保持
 let kotae_data = {};
 
@@ -79,6 +82,8 @@ function show_mondai(data, qslink) {
 
     // コントロールを表示
     control_buttons.style.display = "";
+
+    Open_mondai.click();
 }
 
 Open_mondai.addEventListener('click', async () => {
@@ -86,8 +91,11 @@ Open_mondai.addEventListener('click', async () => {
         return;
     }
 
+    pdfjs_iframe.src = last_qslink;
+
+    // pdfjs_iframe.src = "./pdfjs-4.5.136-dist/web/viewer.html?file=" + last_qslink;
     //問題のURLをポップアップ
-    window.open(last_qslink, '_blank', 'width=700,height=1020');
+    // window.open(last_qslink, '_blank', 'width=700,height=1020');
 })
 
 kaitou_button.addEventListener('click', async () => {

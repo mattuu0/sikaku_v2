@@ -12,3 +12,6 @@ pip install requests
 3. parse_all_html.py を実行する
 4. auto_dl.py を実行する
 5. extract_all.py を実行する
+
+## 注意
+web/pdfjs-4.5.136-dist/web/viewer.mjs の HOSTED_VIEWER_ORIGINS に オリジンをついかする (多分pdf.jsがあるオリジン)
