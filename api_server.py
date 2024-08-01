@@ -1,29 +1,78 @@
 import os
 import json
 
-#設定
-dl_dir = "./auto_dl"
+with open("./datas/datas.json", "r", encoding="utf-8") as read_file:
+    siken_datas = json.load(read_file)
 
-# json 読み込み
-with open("./result.json", "r", encoding="utf-8") as read_file:
-    result_json = json.load(read_file)
+from fastapi import FastAPI
+import uvicorn
+from starlette.middleware.cors import CORSMiddleware # 追加
 
-#時間のタグ
-time_tags = {}
+app = FastAPI()
 
-for key, value in result_json.items():
-    # ディレクトリ名生成
-    dl_path = os.path.join(dl_dir, key)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,   # 追記により追加
+    allow_methods=["*"],      # 追記により追加
+    allow_headers=["*"]       # 追記により追加
+)
 
-    # 試験を回す
-    for siken_tag in value.keys():
-        # ディレクトリ名生成
-        siken_dir = os.path.join(dl_path, siken_tag)
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
 
-        # tags かどうか
-        if (siken_tag == "tags"):
-            continue
+@app.get("/years")
+async def years():
+    # 試験の年度を返す
+    return list(siken_datas.keys())
 
-        # 時間のタグ取得
-        for time_tag in value[siken_tag].keys():
-            print(time_tag)
+@app.get("/sikens/{year}")
+async def sikens(year:str):
+    # 指定の年度の試験を返す
+    return siken_datas[year]["tags"]
+
+@app.get("/times/{year}/{sikentag}")
+async def siken_times(year:str,sikentag:str):
+    # 試験会の時間を返す
+    times = {}
+
+    # 試験の時間を回す
+    for time_tag in siken_datas[year]["siken_times"][sikentag]:
+        times[time_tag] = siken_datas[year]["time_tags"][time_tag]
+
+    # 指定の年度の試験を返す
+    return times
+
+@app.get("/siken/{year}/{sikentag}/{time_tag}")
+async def siken_times(year:str,sikentag:str,time_tag:str):
+    # 年度の情報取得
+    if not year in siken_datas.keys():
+        # 年度がないとき
+        return {
+            "success": False
+        }
+
+    # 年度情報取得
+    year_data = siken_datas[year]
+
+    # 試験のタグが含まれているか
+    if not sikentag in year_data["tags"].keys():
+        # 試験のタグが含まれていないとき
+        return {
+            "success": False
+        }
+    
+    # 時間のタグが含まれているか
+    if not time_tag in year_data["time_tags"].keys():
+        # 時間のタグが含まれていないとき
+        return {
+            "success": False
+        }
+
+    # パスを生成する
+    with open(f"./datas/{year}/{sikentag}/{time_tag}/data.json", "r", encoding="utf-8") as read_file:
+        return json.load(read_file)
+
+if __name__ == "__main__":
+    uvicorn.run("api_server:app", host="127.0.0.1", port=8080, log_level="debug",reload=True)

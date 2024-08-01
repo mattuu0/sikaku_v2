@@ -80,7 +80,7 @@ for atag_elem in atag_elems:
         # 年度HTMLの保存先
         save_path = "./htmls/" + year_tag + ".html"
 
-        if os.path.exists(save_path):
+        if not os.path.exists(save_path):
             # HTMLを取得
             html_content = request_html(href_url)
 

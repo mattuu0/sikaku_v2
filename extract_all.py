@@ -110,11 +110,13 @@ for key, value in tqdm(result_json.items()):
                 extract_data = extract(os.path.join(time_dir, siken_data["ansname"]))
 
                 #拡張子を分離
-                result_name = os.path.splitext(siken_data["ansname"])[0]
+                # result_name = os.path.splitext(siken_data["ansname"])[0]
 
                 # 結果を書き込む
-                with open(os.path.join(time_dir,result_name + ".json"), "w", encoding="utf-8") as write_file:
+                with open(os.path.join(time_dir,"data" + ".json"), "w", encoding="utf-8") as write_file:
                     json.dump({
+                        "qsname" : siken_data["qsname"],
+                        "qslink" : siken_data["qslink"],
                         "count ": len(extract_data),
                         "data": extract_data
                     }, write_file, ensure_ascii=False, indent=3)
@@ -124,12 +126,29 @@ for key, value in tqdm(result_json.items()):
                 traceback.print_exc()
                 
                 continue
+    #tags copy
+    tags = dict(value["tags"])
 
+    # 試験ごとの時間
+    siken_times = {}
 
+    # 試験ごとの時間を取得
+    for siken_tag in value["tags"].keys():
+        try:
+            siken_times[siken_tag] = list(value[siken_tag].keys())
+        except:
+            import traceback
+            traceback.print_exc()
+
+            #問題がないタグを削除する
+            del tags[siken_tag]
+
+            continue
     # 結果を返す
     datas_dict[key] = {
         "time_tags": time_tags,
-        "tags": value["tags"]
+        "tags": tags,
+        "siken_times": siken_times
     }
 
 with open(os.path.join(extract_path, "datas.json"), "w", encoding="utf-8") as write_file:

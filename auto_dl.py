@@ -42,15 +42,15 @@ for key, value in result_json.items():
 
     # 試験を回す
     for siken_tag in value.keys():
+        # tags の場合戻る
+        if (siken_tag == "tags"):
+            continue
+
         # ディレクトリ名生成
         siken_dir = os.path.join(dl_path, siken_tag)
 
         # ディレクトリ作成
         ResetDir(siken_dir)
-
-        # tags の場合戻る
-        if (siken_tag == "tags"):
-            continue
 
         # 時間のタグ取得
         for time_tag in value[siken_tag].keys():
