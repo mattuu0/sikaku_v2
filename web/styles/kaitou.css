@@ -1,0 +1,27 @@
+.kaitou {
+    display: flex;
+    width: 100%;
+}
+
+.minaosi_area {
+    width: 10%;
+}
+
+.kaitou_select {
+    width: 100%;
+    min-width: 200px;
+}
+
+.mohan_select {
+    width: 100%;
+    min-width: 200px;
+}
+
+.kaitou_row {
+    text-align: center;
+}
+
+.minaosi_check {
+    inline-size: 30px;
+    block-size: 30px;
+}

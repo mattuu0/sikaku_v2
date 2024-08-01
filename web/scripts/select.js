@@ -16,11 +16,8 @@ const times_container = document.getElementById('times_container');
 // 試験の時間 (ボタン置く場所)
 const times_area = document.getElementById('times_area');
 
-function RemoveChildren(node) {
-    while (node.firstChild) {
-        node.removeChild(node.lastChild);
-    }
-}
+// 試験名表示
+const siken_name = document.getElementById('siken_name');
 
 function Show_years() {
     years_container.style.display = "block";
@@ -60,7 +57,7 @@ async function Siken_Data(year) {
         abtn.innerText = res[siken_key];
 
         abtn.addEventListener('click',async () => {
-            await getTimes(year,siken_key);
+            await getTimes(year,siken_key,res[siken_key]);
         })
 
         // 試験を追加
@@ -70,9 +67,18 @@ async function Siken_Data(year) {
     Show_sikens();
 }
 
-async function getTimes(year,sikentag) {
+async function getTimes(year,sikentag,sikenName) {
+    //問題のURL を削除
+    last_qslink = "";
+
+    // こんとろーらーを隠す
+    control_buttons.style.display = "none";
+
     // 試験の時間を全削除
     RemoveChildren(times_area);
+
+    // 試験名表示
+    siken_name.innerText = `試験名 : ${year}年度 : ${sikenName}`;
 
     // リクエスト送信
     const req = await fetch(`http://127.0.0.1:8000/times/${year}/${sikentag}`,{
@@ -108,6 +114,9 @@ async function GetSiken(year,sikentag,time_tag) {
     const res = await req.json();
 
     console.log(res);
+
+    //問題を表示する
+    show_mondai(res["data"],res["qslink"]);
 }
 
 async function main() {
