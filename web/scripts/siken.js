@@ -28,6 +28,9 @@ function show_mondai(year,sikentag,sikenName,timetag,timeName,data, qslink) {
         return;
     }
 
+    //レポートを生成できないようにする
+    report_able = false;
+
     //前の解答欄を削除する
     RemoveChildren(kaitou_tbody);
 
@@ -173,5 +176,8 @@ kaitou_button.addEventListener('click', async () => {
         // 答えを設定
         mohan_select.value = mohan_converted;
         mohan_select.textContent = kaitou_data["ans"];
+
+        // レポートを生成できるようにする
+        report_able = true;
     }
 })

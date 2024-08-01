@@ -1,5 +1,7 @@
 const export_button = document.getElementById('export_button');
 
+let report_able = false;
+
 const template = `
 <!DOCTYPE html>
 <html lang="en">
@@ -13952,6 +13954,11 @@ const template = `
 
 export_button.addEventListener('click',async () => {
     console.log("click");
+
+    // レポートが生成できない場合
+    if (!report_able) {
+        return;
+    }
 
     //レポート文字列
     let report_str = "";
