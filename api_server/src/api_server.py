@@ -72,41 +72,41 @@ async def siken_times(year:str,sikentag:str,time_tag:str):
 
     return read_json
 
-@app.get("/qspdf/{year}/{sikentag}/{time_tag}")
-async def siken_times(year:str,sikentag:str,time_tag:str):
-    # 年度の情報取得
-    if not year in siken_datas.keys():
-        # 年度がないとき
-        return {
-            "success": False
-        }
+# @app.get("/qspdf/{year}/{sikentag}/{time_tag}")
+# async def siken_times(year:str,sikentag:str,time_tag:str):
+#     # 年度の情報取得
+#     if not year in siken_datas.keys():
+#         # 年度がないとき
+#         return {
+#             "success": False
+#         }
 
-    # 年度情報取得
-    year_data = siken_datas[year]
+#     # 年度情報取得
+#     year_data = siken_datas[year]
 
-    # 試験のタグが含まれているか
-    if not sikentag in year_data["tags"].keys():
-        # 試験のタグが含まれていないとき
-        return {
-            "success": False
-        }
+#     # 試験のタグが含まれているか
+#     if not sikentag in year_data["tags"].keys():
+#         # 試験のタグが含まれていないとき
+#         return {
+#             "success": False
+#         }
     
-    # 時間のタグが含まれているか
-    if not time_tag in year_data["time_tags"].keys():
-        # 時間のタグが含まれていないとき
-        return {
-            "success": False
-        }
+#     # 時間のタグが含まれているか
+#     if not time_tag in year_data["time_tags"].keys():
+#         # 時間のタグが含まれていないとき
+#         return {
+#             "success": False
+#         }
     
-    # json を読み込む
-    with open(f"./datas/{year}/{sikentag}/{time_tag}/data.json", "r", encoding="utf-8") as read_file:
-        read_json = json.load(read_file)
+#     # json を読み込む
+#     with open(f"./datas/{year}/{sikentag}/{time_tag}/data.json", "r", encoding="utf-8") as read_file:
+#         read_json = json.load(read_file)
     
-    # 問題名を取得
-    qsname = read_json["qsname"]
+#     # 問題名を取得
+#     qsname = read_json["qsname"]
 
-    # pdf を返す
-    return FileResponse(path=f"./datas/{year}/{sikentag}/{time_tag}/{qsname}", media_type="application/pdf")
+#     # pdf を返す
+#     return FileResponse(path=f"./datas/{year}/{sikentag}/{time_tag}/{qsname}", media_type="application/pdf")
 
 
 if __name__ == "__main__":
