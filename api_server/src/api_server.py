@@ -11,14 +11,6 @@ from starlette.middleware.cors import CORSMiddleware # 追加
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,   # 追記により追加
-    allow_methods=["*"],      # 追記により追加
-    allow_headers=["*"]       # 追記により追加
-)
-
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
@@ -76,7 +68,7 @@ async def siken_times(year:str,sikentag:str,time_tag:str):
         read_json = json.load(read_file)
     
     # 問題のリンクを設定
-    read_json["qslink"] = f"/qspdf/{year}/{sikentag}/{time_tag}"
+    # read_json["qslink"] = f"/app/qspdf/{year}/{sikentag}/{time_tag}"
 
     return read_json
 
