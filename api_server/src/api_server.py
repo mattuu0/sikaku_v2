@@ -5,11 +5,18 @@ with open("./datas/datas.json", "r", encoding="utf-8") as read_file:
     siken_datas = json.load(read_file)
 
 from fastapi import FastAPI
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse,Request
 import uvicorn
 from starlette.middleware.cors import CORSMiddleware # 追加
 
 app = FastAPI()
+
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    
+
+    response = await call_next(request)
+    return response
 
 @app.get("/")
 async def root():
