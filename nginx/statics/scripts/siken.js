@@ -215,6 +215,12 @@ kaitou_button.addEventListener('click', async () => {
         // 答えを設定
         mohan_select.value = mohan_converted;
         mohan_select.textContent = kaitou_data["ans"];
+
+        // 解答欄にスクロール (真ん中に)
+        kaitou.scrollIntoView({ block: 'center',inline: 'center' });
+        
+        // 100ミリ秒待機
+        await new Promise(r => setTimeout(r, 100));
     }
 
     // レポートを生成できるようにする
@@ -226,3 +232,8 @@ kaitou_button.addEventListener('click', async () => {
     // ロード画面非表示
     hideLoading();
 })
+
+function movetoTop() {
+    // トップへ移動
+    document.getElementById("mondai_area").scrollTo({top: 0, behavior: 'smooth'});
+}
