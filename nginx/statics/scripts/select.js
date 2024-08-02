@@ -221,7 +221,6 @@ async function main() {
         
     } catch (error) {
         console.log(error);
-        alert("問題の取得に失敗しました。");
     }
 
     // ロード画面非表示
