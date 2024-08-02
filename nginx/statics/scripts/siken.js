@@ -31,71 +31,84 @@ function show_mondai(year,sikentag,sikenName,timetag,timeName,data, qslink) {
         return;
     }
 
-    //レポートを生成できないようにする
-    report_able = false;
+    // ロード画面表示
+    setLoadText("データを取得中");
+    showLoading();
 
-    //前の解答欄を削除する
-    RemoveChildren(kaitou_tbody);
+    try {
 
-    // 答えのデータ設定
-    kotae_data = data;
+        //レポートを生成できないようにする
+        report_able = false;
 
-    //問題を回す
-    for (const key of Object.keys(data)) {
-        // 問題を取得
-        const kaitou_data = data[key];
+        //前の解答欄を削除する
+        RemoveChildren(kaitou_tbody);
 
-        console.log(kaitou_data);
+        // 答えのデータ設定
+        kotae_data = data;
 
-        // 解答欄のID 生成
-        const kaitouid = `kaitou_input_${kaitou_data["num"]}`;
+        //問題を回す
+        for (const key of Object.keys(data)) {
+            // 問題を取得
+            const kaitou_data = data[key];
 
-        // 模範解答欄のID 生成
-        const mohan_kaitouid = `mohan_input_${kaitou_data["num"]}`;
+            console.log(kaitou_data);
 
-        // 解答欄のtr id 生成
-        const kaitou_trid = `kaitou_tr_${kaitou_data["num"]}`;
+            // 解答欄のID 生成
+            const kaitouid = `kaitou_input_${kaitou_data["num"]}`;
 
-        // 模範解答のselect id 生成
-        const mohan_selectid = `mohan_select_${kaitou_data["num"]}`;
-        
-        // 解答欄のcheckbox id 生成
-        const checkboxid = `kaitou_check_${kaitou_data["num"]}`;
+            // 模範解答欄のID 生成
+            const mohan_kaitouid = `mohan_input_${kaitou_data["num"]}`;
 
-        //解答欄を生成
-        kaitou_tbody.insertAdjacentHTML('beforeend', `
-            <tr class="kaitou_row" id=${kaitou_trid}>
-                <th scope="row">${kaitou_data["num"]}</th>
-                <td class="minaosi_area">
-                    <input type="checkbox" class="minaosi_check" id=${checkboxid}>
-                </td>
-                <td>
-                    <select name="" id=${kaitouid} class="kaitou_select form-select form-select-lg">
-                        <option value="none" selected>未選択</option>
-                        <option value="a">ア</option>
-                        <option value="i">イ</option>
-                        <option value="u">ウ</option>
-                        <option value="e">エ</option>
-                    </select>
-                </td>
-                <td>
-                    <select name="" id=${mohan_kaitouid} disabled class="form-select form-select-lg mohan_select">
-                        <option selected id=${mohan_selectid}>未選択</option>
-                    </select>
-                </td>
-            </tr>`
-        );
+            // 解答欄のtr id 生成
+            const kaitou_trid = `kaitou_tr_${kaitou_data["num"]}`;
+
+            // 模範解答のselect id 生成
+            const mohan_selectid = `mohan_select_${kaitou_data["num"]}`;
+            
+            // 解答欄のcheckbox id 生成
+            const checkboxid = `kaitou_check_${kaitou_data["num"]}`;
+
+            //解答欄を生成
+            kaitou_tbody.insertAdjacentHTML('beforeend', `
+                <tr class="kaitou_row" id=${kaitou_trid}>
+                    <th scope="row">${kaitou_data["num"]}</th>
+                    <td class="minaosi_area">
+                        <input type="checkbox" class="minaosi_check" id=${checkboxid}>
+                    </td>
+                    <td>
+                        <select name="" id=${kaitouid} class="kaitou_select form-select form-select-lg">
+                            <option value="none" selected>未選択</option>
+                            <option value="a">ア</option>
+                            <option value="i">イ</option>
+                            <option value="u">ウ</option>
+                            <option value="e">エ</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="" id=${mohan_kaitouid} disabled class="form-select form-select-lg mohan_select">
+                            <option selected id=${mohan_selectid}>未選択</option>
+                        </select>
+                    </td>
+                </tr>`
+            );
+        }
+
+        // 問題のURL
+        last_qslink = qslink;
+
+        console.log(qslink);
+
+        total_siken_name.textContent = `${year}年度 ${sikenName}試験 ${timeName}問題`;
+
+        // コントロールを表示
+        Show_Conrtols();
+    } catch (error) {
+        console.log(error);
+        alert("問題の読み込みに失敗しました。");
     }
 
-    // 問題のURL
-    last_qslink = qslink;
-
-    console.log(qslink);
-
-    total_siken_name.textContent = `${year}年度 ${sikenName}試験 ${timeName}問題`;
-
-    // コントロールを表示
-    Show_Conrtols();
+    // ロードを隠す
+    hideLoading();
 }
 
 Open_mondai.addEventListener('click', async () => {
@@ -119,6 +132,10 @@ kaitou_button.addEventListener('click', async () => {
     if (!confirm) {
         return;
     }
+
+    // ロード画面表示
+    setLoadText("確認中");
+    showLoading();
 
     //レポート用のデータを初期化
     report_data = {};
@@ -205,4 +222,7 @@ kaitou_button.addEventListener('click', async () => {
         //正答率を更新
         result_button.textContent = `正答率 : ${correct_num / qs_num * 100}%`;
     }
+
+    // ロード画面非表示
+    hideLoading();
 })

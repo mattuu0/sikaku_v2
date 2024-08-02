@@ -54,38 +54,47 @@ async function Siken_Data(year) {
     // 試験一覧を全削除
     RemoveChildren(sikens_area);
 
+    // ロード画面表示
+    setLoadText("データを取得中");
+    showLoading();
 
-
-    const req = await fetch(`/app/sikens/${year}`,{
-        method: "GET",
-        headers: {
-            "actoken" : await GetToken()
-        }
-    })
-
-    const res = await req.json();
-
-    console.log(res);
-
-    // 年表示
-    year_name.innerText = `${year}年度`;
-
-    // 試験を回す
-    for (const siken_key of Object.keys(res)) {
-        // 試験を生成
-        const abtn = document.createElement('a');
-        abtn.className = "select_btn";
-        abtn.innerText = res[siken_key];
-
-        abtn.addEventListener('click',async () => {
-            await getTimes(year,siken_key,res[siken_key]);
+    try {
+        const req = await fetch(`/app/sikens/${year}`,{
+            method: "GET",
+            headers: {
+                "actoken" : await GetToken()
+            }
         })
 
-        // 試験を追加
-        sikens_area.appendChild(abtn);
+        const res = await req.json();
+
+        console.log(res);
+
+        // 年表示
+        year_name.innerText = `${year}年度`;
+
+        // 試験を回す
+        for (const siken_key of Object.keys(res)) {
+            // 試験を生成
+            const abtn = document.createElement('a');
+            abtn.className = "select_btn";
+            abtn.innerText = res[siken_key];
+
+            abtn.addEventListener('click',async () => {
+                await getTimes(year,siken_key,res[siken_key]);
+            })
+
+            // 試験を追加
+            sikens_area.appendChild(abtn);
+        }
+
+        Show_sikens();
+    } catch (error) {
+        console.log(error);
     }
 
-    Show_sikens();
+    // ロード画面非表示
+    hideLoading();
 }
 
 async function getTimes(year,sikentag,sikenName) {
@@ -95,55 +104,68 @@ async function getTimes(year,sikentag,sikenName) {
     // 試験の時間を全削除
     RemoveChildren(times_area);
 
-    // 試験名表示
-    siken_name.innerText = `試験名 : ${year}年度 : ${sikenName}`;
+    // ロード画面表示
+    setLoadText("データを取得中");
+    showLoading();
 
-    // リクエスト送信
-    const req = await fetch(`/app/times/${year}/${sikentag}`,{
-        method: "GET",
-        headers : {
-            "actoken" : await GetToken()
+    try {
+
+        // 試験名表示
+        siken_name.innerText = `試験名 : ${year}年度 : ${sikenName}`;
+
+        // リクエスト送信
+        const req = await fetch(`/app/times/${year}/${sikentag}`,{
+            method: "GET",
+            headers : {
+                "actoken" : await GetToken()
+            }
+        })
+
+        // 試験の時間を取得
+        const res = await req.json();
+
+        // 試験の時間を回す
+        for (const time_tag of Object.keys(res)) {
+            // 問題のデータ取得
+            const mondai_data = await GetSiken(year,sikentag,sikenName,time_tag,res[time_tag]);
+
+            // 試験を生成
+            const abtn = document.createElement('a');
+            abtn.className = "select_btn";
+
+            // 問題のデータがない場合
+            if (mondai_data["count"] == 0) {
+
+                abtn.innerHTML = `
+                    ${res[time_tag]} 
+                    <span style="color:red;">${mondai_data["count"]}</span>問
+                `;
+            } else {
+                // 問題数表示
+                abtn.innerText = `${res[time_tag]} ${mondai_data["count"]}問`;
+
+                //イベント追加
+                abtn.addEventListener('click',async () => {
+                    // 問題を取得
+                    const data = await GetSiken(year,sikentag,sikenName,time_tag,res[time_tag]);
+
+                    // 問題を生成
+                    show_mondai(year,sikentag,sikenName,time_tag,time_tag,data["data"],data["qslink"]);
+                })
+            }
+
+            // 試験を追加
+            times_area.appendChild(abtn);
         }
-    })
 
-    // 試験の時間を取得
-    const res = await req.json();
-
-    // 試験の時間を回す
-    for (const time_tag of Object.keys(res)) {
-        // 問題のデータ取得
-        const mondai_data = await GetSiken(year,sikentag,sikenName,time_tag,res[time_tag]);
-
-        // 試験を生成
-        const abtn = document.createElement('a');
-        abtn.className = "select_btn";
-
-        // 問題のデータがない場合
-        if (mondai_data["count"] == 0) {
-
-            abtn.innerHTML = `
-                ${res[time_tag]} 
-                <span style="color:red;">${mondai_data["count"]}</span>問
-            `;
-        } else {
-            // 問題数表示
-            abtn.innerText = `${res[time_tag]} ${mondai_data["count"]}問`;
-
-            //イベント追加
-            abtn.addEventListener('click',async () => {
-                // 問題を取得
-                const data = await GetSiken(year,sikentag,sikenName,time_tag,res[time_tag]);
-
-                // 問題を生成
-                show_mondai(year,sikentag,sikenName,time_tag,time_tag,data["data"],data["qslink"]);
-            })
-        }
-
-        // 試験を追加
-        times_area.appendChild(abtn);
+        Show_times();
+    } catch (error) {
+        console.log(error);
+        alert("問題の取得に失敗しました。");
     }
 
-    Show_times();
+    // ロード画面非表示
+    hideLoading();
 }
 
 async function GetSiken(year,sikentag,sikenName,time_tag,timeName) {
@@ -163,33 +185,47 @@ async function main() {
     // ボタンを全削除
     RemoveChildren(year_buttons);
 
-    // リクエスト送信
-    const req = await fetch("/app/years",{
-        method: "GET",
-        headers : {
-            "actoken" : await GetToken()
+    // ロード画面表示
+    setLoadText("データを取得中");
+    showLoading();
+
+    try {
+
+        // リクエスト送信
+        const req = await fetch("/app/years",{
+            method: "GET",
+            headers : {
+                "actoken" : await GetToken()
+            }
+        });
+
+        const res = await req.json();
+
+        console.log(res);
+
+        // 年を回す
+        for (const year of res) {
+            //ボタンを生成
+            const abtn = document.createElement('a');
+            abtn.className = "select_btn";
+            abtn.innerText = year;
+
+            //ボタンを追加
+            year_buttons.appendChild(abtn);
+
+            //イベント追加
+            abtn.addEventListener('click',async () => {
+                await Siken_Data(year);
+            })
         }
-    });
-
-    const res = await req.json();
-
-    console.log(res);
-
-    // 年を回す
-    for (const year of res) {
-        //ボタンを生成
-        const abtn = document.createElement('a');
-        abtn.className = "select_btn";
-        abtn.innerText = year;
-
-        //ボタンを追加
-        year_buttons.appendChild(abtn);
-
-        //イベント追加
-        abtn.addEventListener('click',async () => {
-            await Siken_Data(year);
-        })
+        
+    } catch (error) {
+        console.log(error);
+        alert("問題の取得に失敗しました。");
     }
+
+    // ロード画面非表示
+    hideLoading();
 }
 
 main();
