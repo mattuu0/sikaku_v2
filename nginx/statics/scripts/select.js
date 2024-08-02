@@ -19,6 +19,9 @@ const times_area = document.getElementById('times_area');
 // 試験名表示
 const siken_name = document.getElementById('siken_name');
 
+// 年月表示
+const year_name = document.getElementById('year_name');
+
 function Show_years() {
     years_container.style.display = "block";
     sikens_container.style.display = "none";
@@ -59,6 +62,9 @@ async function Siken_Data(year) {
 
     console.log(res);
 
+    // 年表示
+    year_name.innerText = `${year}年度`;
+
     // 試験を回す
     for (const siken_key of Object.keys(res)) {
         // 試験を生成
@@ -97,14 +103,33 @@ async function getTimes(year,sikentag,sikenName) {
 
     // 試験の時間を回す
     for (const time_tag of Object.keys(res)) {
+        // 問題のデータ取得
+        const mondai_data = await GetSiken(year,sikentag,sikenName,time_tag,res[time_tag]);
+
         // 試験を生成
         const abtn = document.createElement('a');
         abtn.className = "select_btn";
-        abtn.innerText = res[time_tag];
 
-        abtn.addEventListener('click',async () => {
-            await GetSiken(year,sikentag,sikenName,time_tag,res[time_tag]);
-        })
+        // 問題のデータがない場合
+        if (mondai_data["count"] == 0) {
+
+            abtn.innerHTML = `
+                ${res[time_tag]} 
+                <span style="color:red;">${mondai_data["count"]}</span>問
+            `;
+        } else {
+            // 問題数表示
+            abtn.innerText = `${res[time_tag]} ${mondai_data["count"]}問`;
+
+            //イベント追加
+            abtn.addEventListener('click',async () => {
+                // 問題を取得
+                const data = await GetSiken(year,sikentag,sikenName,time_tag,res[time_tag]);
+
+                // 問題を生成
+                show_mondai(year,sikentag,sikenName,time_tag,time_tag,data["data"],data["qslink"]);
+            })
+        }
 
         // 試験を追加
         times_area.appendChild(abtn);
@@ -120,10 +145,7 @@ async function GetSiken(year,sikentag,sikenName,time_tag,timeName) {
 
     const res = await req.json();
 
-    console.log(res);
-
-    //問題を表示する
-    show_mondai(year,sikentag,sikenName,time_tag,timeName,res["data"],res["qslink"]);
+    return res;
 }
 
 async function main() {

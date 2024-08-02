@@ -117,7 +117,7 @@ for key, value in tqdm(result_json.items()):
                     json.dump({
                         "qsname" : siken_data["qsname"],
                         "qslink" : siken_data["qslink"],
-                        "count ": len(extract_data),
+                        "count": len(extract_data),
                         "data": extract_data
                     }, write_file, ensure_ascii=False, indent=3)
 

@@ -18,6 +18,9 @@ const pdfjs_iframe = document.getElementById('pdfjs-iframe');
 // 試験の名前を表示する
 const total_siken_name = document.getElementById('total_siken_name');
 
+// 結果を表示する
+const result_button = document.getElementById('result_button');
+
 //答えの情報保持
 let kotae_data = {};
 
@@ -120,6 +123,12 @@ kaitou_button.addEventListener('click', async () => {
     //レポート用のデータを初期化
     report_data = {};
 
+    // 問題数
+    let qs_num = 0;
+    
+    //正解数
+    let correct_num = 0;
+
     for (const key of Object.keys(kotae_data)) {
         const kaitou_data = kotae_data[key];
 
@@ -173,11 +182,16 @@ kaitou_button.addEventListener('click', async () => {
             //正解
             kaitou_tr.classList.add("table-success");
             report_data[kaitou_data["num"]]["tabletag"] = "table-success";
+
+            correct_num++;
         } else {
             //不正解
             kaitou_tr.classList.add("table-danger");
             report_data[kaitou_data["num"]]["tabletag"] = "table-danger";
         }
+
+        //問題数をカウント
+        qs_num++;
 
         // 模範解答を設定
 
@@ -187,5 +201,8 @@ kaitou_button.addEventListener('click', async () => {
 
         // レポートを生成できるようにする
         report_able = true;
+
+        //正答率を更新
+        result_button.textContent = `正答率 : ${correct_num / qs_num * 100}%`;
     }
 })
