@@ -82,7 +82,7 @@ async function Get_Years(siken_tag,siken_name) {
             //ボタンを生成
             const abtn = document.createElement('a');
             abtn.className = "select_btn";
-            abtn.innerText = year;
+            abtn.innerText = year + "年度";
 
             abtn.addEventListener('click',async () => {
                 await getTimes(year,siken_tag,siken_name);
@@ -257,7 +257,7 @@ async function main() {
             //ボタンを生成
             const abtn = document.createElement('a');
             abtn.className = "select_btn";
-            abtn.innerText = res[siken_tag] + "年";
+            abtn.innerText = res[siken_tag];
 
             //ボタンを追加
             sikens_area.appendChild(abtn);
