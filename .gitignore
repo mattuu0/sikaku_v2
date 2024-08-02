@@ -1,0 +1,4 @@
+nginx/keys/
+nginx/keys/server.crt
+nginx/keys/server.csr
+nginx/keys/server.key
