@@ -215,13 +215,13 @@ kaitou_button.addEventListener('click', async () => {
         // 答えを設定
         mohan_select.value = mohan_converted;
         mohan_select.textContent = kaitou_data["ans"];
-
-        // レポートを生成できるようにする
-        report_able = true;
-
-        //正答率を更新
-        result_button.textContent = `正答率 : ${correct_num / qs_num * 100}%`;
     }
+
+    // レポートを生成できるようにする
+    report_able = true;
+
+    //正答率を更新
+    result_button.textContent = `正答率 : ${correct_num / qs_num * 100}%`;
 
     // ロード画面非表示
     hideLoading();

@@ -13,7 +13,6 @@ async function Init() {
         // Provider information
         console.log(session.provider);
         console.log(session.providerUid);
-        console.log(session.providerAccessToken);
 
         // ロードを隠す
         hideLoading();
