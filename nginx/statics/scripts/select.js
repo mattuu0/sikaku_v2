@@ -199,7 +199,7 @@ async function getTimes(year,sikentag,sikenName) {
                     const data = await GetSiken(year,sikentag,sikenName,time_tag,res[time_tag]);
 
                     // 問題を生成
-                    show_mondai(year,sikentag,sikenName,time_tag,time_tag,data["data"],data["qslink"]);
+                    show_mondai(year,sikentag,sikenName,time_tag,timeName,data["data"],data["qslink"]);
                 })
             }
 
