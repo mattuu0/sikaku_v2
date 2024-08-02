@@ -1,1 +1,2 @@
 nginx/keys/*
+api_server/src/.env

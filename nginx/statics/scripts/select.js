@@ -54,8 +54,13 @@ async function Siken_Data(year) {
     // 試験一覧を全削除
     RemoveChildren(sikens_area);
 
+
+
     const req = await fetch(`/app/sikens/${year}`,{
         method: "GET",
+        headers: {
+            "actoken" : await GetToken()
+        }
     })
 
     const res = await req.json();
@@ -96,6 +101,9 @@ async function getTimes(year,sikentag,sikenName) {
     // リクエスト送信
     const req = await fetch(`/app/times/${year}/${sikentag}`,{
         method: "GET",
+        headers : {
+            "actoken" : await GetToken()
+        }
     })
 
     // 試験の時間を取得
@@ -141,6 +149,9 @@ async function getTimes(year,sikentag,sikenName) {
 async function GetSiken(year,sikentag,sikenName,time_tag,timeName) {
     const req = await fetch(`/app/siken/${year}/${sikentag}/${time_tag}`,{
         method: "GET",
+        headers : {
+            "actoken" : await GetToken()
+        }
     })
 
     const res = await req.json();
@@ -155,6 +166,9 @@ async function main() {
     // リクエスト送信
     const req = await fetch("/app/years",{
         method: "GET",
+        headers : {
+            "actoken" : await GetToken()
+        }
     });
 
     const res = await req.json();

@@ -9,6 +9,8 @@ RUN pip install PyMuPDF
 RUN pip install requests
 RUN pip install fastapi
 RUN pip install gunicorn
+RUN pip install python-dotenv
+RUN pip install appwrite
 
 COPY ./src .
 

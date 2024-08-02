@@ -1,15 +1,61 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 import os
 import json
 
 with open("./datas/datas.json", "r", encoding="utf-8") as read_file:
     siken_datas = json.load(read_file)
 
-from fastapi import FastAPI
-from fastapi.responses import FileResponse
+from fastapi import FastAPI,Request,HTTPException
+from fastapi.responses import JSONResponse
 import uvicorn
-from starlette.middleware.cors import CORSMiddleware # 追加
+from appwrite.client import Client
+from appwrite.services.account import Account
+
 
 app = FastAPI()
+
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    try:
+        # クライアント生成
+        client = Client()
+
+        # クライアント設定
+        (client
+            .set_endpoint(os.environ["APPWRITE_ENDPOINT"]) # Your API Endpoint
+            .set_project(os.environ["APPWRITE_PROJECT_ID"]) # Your project ID
+            .set_jwt(request.headers.get("actoken")) # Your secret JSON Web Token
+        )
+
+        # アカウント情報取得
+        account = Account(client)
+
+        # アカウント情報取得
+        result = account.get()
+
+        # メールが認証されているか
+        if (not result["emailVerification"]):
+            #認証されていないとき
+            raise HTTPException(status_code=401, detail="認証されていません")
+        
+        # メールを検証
+        if (not str(result["email"]).endswith("@ecc.ac.jp")):
+            # ecc.ac.jp ではないとき
+            raise HTTPException(status_code=401, detail="認証されていません")
+        
+        return await call_next(request)
+    except:
+        import traceback
+        traceback.print_exc()
+
+        return JSONResponse(
+            status_code=401,
+            content={"success": False}
+        )
+    # response = await call_next(request)
+    # return response
 
 @app.get("/")
 async def root():
@@ -110,4 +156,4 @@ async def siken_times(year:str,sikentag:str,time_tag:str):
 
 
 if __name__ == "__main__":
-    uvicorn.run("api_server:app", host="127.0.0.1", port=8080, log_level="debug",reload=True)
+    uvicorn.run("api_server:app", host="0.0.0.0", port=3001, log_level="debug",reload=True)
