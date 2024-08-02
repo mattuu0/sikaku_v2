@@ -3,4 +3,6 @@ function beforeUnload(event){
     event.returnValue = 'Check';
 }
 
-window.onbeforeunload = beforeUnload;
+window.addEventListener("DOMContentLoaded",function(evt){
+    window.onbeforeunload = beforeUnload;
+})
