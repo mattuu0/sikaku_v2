@@ -257,7 +257,7 @@ async function main() {
             //ボタンを生成
             const abtn = document.createElement('a');
             abtn.className = "select_btn";
-            abtn.innerText = res[siken_tag];
+            abtn.innerText = res[siken_tag] + "年";
 
             //ボタンを追加
             sikens_area.appendChild(abtn);
