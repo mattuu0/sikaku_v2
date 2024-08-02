@@ -22,6 +22,9 @@ const siken_name = document.getElementById('siken_name');
 // 年月表示
 const year_name = document.getElementById('year_name');
 
+// 試験名表示
+const select_siken_name = document.getElementById('select_siken_name');
+
 function Show_years() {
     years_container.style.display = "block";
     sikens_container.style.display = "none";
@@ -48,6 +51,52 @@ function Show_Conrtols() {
     sikens_container.style.display = "none";
     times_container.style.display = "none";
     control_buttons.style.display = "block";
+}
+
+async function Get_Years(siken_tag,siken_name) {
+    // ロード画面表示
+    setLoadText("データを取得中");
+    showLoading();
+
+    try {
+        // 年を表示
+        Show_years();
+
+        // 試験名表示
+        select_siken_name.innerText = siken_name;
+
+        // 年度を全削除
+        RemoveChildren(year_buttons);
+
+        const req = await fetch(`/app/years/${siken_tag}`,{
+            method: "GET",
+            headers: {
+                "actoken" : await GetToken()
+            }
+        })
+
+        const res = await req.json();
+
+        // リストを回す
+        for (const year of res) {
+            //ボタンを生成
+            const abtn = document.createElement('a');
+            abtn.className = "select_btn";
+            abtn.innerText = year;
+
+            abtn.addEventListener('click',async () => {
+                await getTimes(year,siken_tag,siken_name);
+            })
+
+            //ボタンを追加
+            year_buttons.appendChild(abtn);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+
+    // ロード画面非表示
+    hideLoading();
 }
 
 async function Siken_Data(year) {
@@ -183,7 +232,7 @@ async function GetSiken(year,sikentag,sikenName,time_tag,timeName) {
 
 async function main() {
     // ボタンを全削除
-    RemoveChildren(year_buttons);
+    RemoveChildren(sikens_area);
 
     // ロード画面表示
     setLoadText("データを取得中");
@@ -192,7 +241,7 @@ async function main() {
     try {
 
         // リクエスト送信
-        const req = await fetch("/app/years",{
+        const req = await fetch("/app/sikens",{
             method: "GET",
             headers : {
                 "actoken" : await GetToken()
@@ -203,19 +252,19 @@ async function main() {
 
         console.log(res);
 
-        // 年を回す
-        for (const year of res) {
+        // 試験を回す
+        for (const siken_tag of Object.keys(res)) {
             //ボタンを生成
             const abtn = document.createElement('a');
             abtn.className = "select_btn";
-            abtn.innerText = year;
+            abtn.innerText = res[siken_tag];
 
             //ボタンを追加
-            year_buttons.appendChild(abtn);
+            sikens_area.appendChild(abtn);
 
             //イベント追加
             abtn.addEventListener('click',async () => {
-                await Siken_Data(year);
+                await Get_Years(siken_tag,res[siken_tag]);
             })
         }
         

@@ -19,20 +19,21 @@
 <body>
     <div style="display: flex; overflow: hidden;width: 100vw;height: 100vh; display: none;" id="main_content">
         <div style="height: 100vh;width: 100%;overflow-y: scroll;" id="mondai_area">
-            <div id="years_container">
+            <div id="sikens_container">
                 <a id="back_button" class="select_btn" onclick="init_settings()">初期設定</a>
                 <a id="logout_button" class="select_btn" onclick="Logout()">ログアウト</a>
-                <div id="year_buttons">
-                </div>
-            </div>
-            <div id="sikens_container" style="display: none;">
-                <a id="back_button" class="select_btn" onclick="Show_years()">戻る</a>
-                <a class="select_btn" id="year_name"></a>
                 <div id="sikens_area">
                 </div>
             </div>
-            <div id="times_container" style="display: none;">
+            <div id="years_container" style="display: none;">
                 <a id="back_button" class="select_btn" onclick="Show_sikens()">戻る</a>
+                <a class="select_btn" id="select_siken_name"></a>
+                <div id="year_buttons">
+                </div>
+            </div>
+            
+            <div id="times_container" style="display: none;">
+                <a id="back_button" class="select_btn" onclick="Show_years()">戻る</a>
                 <a class="select_btn" id="siken_name"></a>
                 <div id="times_area">
                 </div>

@@ -129,7 +129,24 @@ async def siken_times(year:str,sikentag:str,time_tag:str):
 
 @app.get("/sikens")
 async def sikens():
-    return list(siken_datas_v2.keys())
+    # 返す用の辞書
+    return_dict = {}
+
+    for siken_tag in siken_datas_v2.keys():
+        try:
+            return_dict[siken_tag] = siken_datas_v2[siken_tag]["name"]
+        except:
+            import traceback
+            traceback.print_exc()
+
+            continue
+    
+    return return_dict
+
+@app.get("/years/{sikentag}")
+async def years(sikentag:str):
+    # 試験の年度を返す
+    return list(siken_datas_v2[sikentag]["years"])
 
 # @app.get("/qspdf/{year}/{sikentag}/{time_tag}")
 # async def siken_times(year:str,sikentag:str,time_tag:str):
@@ -169,4 +186,4 @@ async def sikens():
 
 
 if __name__ == "__main__":
-    uvicorn.run("api_server:app", host="0.0.0.0", port=3001, log_level="debug",reload=True)
+    uvicorn.run("api_server:app", host="0.0.0.0", port=3001, log_level="debug",reload=False)

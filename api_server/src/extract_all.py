@@ -93,6 +93,9 @@ for year_tag, value in tqdm(result_json.items()):
     # ディレクトリ名生成
     dl_path = os.path.join(extract_path, year_tag)
 
+    #tags copy
+    tags = dict(value["tags"])
+
     # 試験を回す
     for siken_tag in tqdm(value.keys()):
         # ディレクトリ名生成
@@ -105,7 +108,8 @@ for year_tag, value in tqdm(result_json.items()):
         # キーがなかったら初期化
         if not siken_tag in datas_dict_v2.keys():
             datas_dict_v2[siken_tag] = {
-                year_tag : []
+                "name" : str(tags[siken_tag]),
+                "years" : []
             }
 
         # 時間のタグ取得
@@ -140,17 +144,20 @@ for year_tag, value in tqdm(result_json.items()):
                 # 初期刺されているか
                 if not year_tag in datas_dict_v2[siken_tag].keys():
                     # リスト初期化
-                    datas_dict_v2[siken_tag][year_tag] = []
+                    datas_dict_v2[siken_tag][year_tag] = {}
 
                 # リストに追加
-                datas_dict_v2[siken_tag][year_tag].append(time_tag)
+                datas_dict_v2[siken_tag][year_tag][time_tag] = convert_timetag(time_tag)
+
+                # リストに存在するか
+                if not year_tag in datas_dict_v2[siken_tag]["years"]:
+                    #存在しない場合 追加
+                    datas_dict_v2[siken_tag]["years"].append(year_tag)
             except:
                 import traceback
                 traceback.print_exc()
                 
                 continue
-    #tags copy
-    tags = dict(value["tags"])
 
     # 試験ごとの時間
     siken_times = {}
