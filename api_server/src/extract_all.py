@@ -3,6 +3,13 @@ import fitz
 import re
 import json
 import os
+import sys
+
+# 自身のディレクトリに移動
+try:
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+except:
+    pass
 
 from tqdm import tqdm
 
@@ -79,9 +86,12 @@ time_tags = {}
 # データ辞書
 datas_dict = {}
 
-for key, value in tqdm(result_json.items()):
+# データ辞書 V2
+datas_dict_v2 = {}
+
+for year_tag, value in tqdm(result_json.items()):
     # ディレクトリ名生成
-    dl_path = os.path.join(extract_path, key)
+    dl_path = os.path.join(extract_path, year_tag)
 
     # 試験を回す
     for siken_tag in tqdm(value.keys()):
@@ -91,6 +101,12 @@ for key, value in tqdm(result_json.items()):
         # tags かどうか
         if (siken_tag == "tags"):
             continue
+        
+        # キーがなかったら初期化
+        if not siken_tag in datas_dict_v2.keys():
+            datas_dict_v2[siken_tag] = {
+                year_tag : []
+            }
 
         # 時間のタグ取得
         for time_tag in tqdm(value[siken_tag].keys()):
@@ -120,7 +136,14 @@ for key, value in tqdm(result_json.items()):
                         "count": len(extract_data),
                         "data": extract_data
                     }, write_file, ensure_ascii=False, indent=3)
+                
+                # 初期刺されているか
+                if not year_tag in datas_dict_v2[siken_tag].keys():
+                    # リスト初期化
+                    datas_dict_v2[siken_tag][year_tag] = []
 
+                # リストに追加
+                datas_dict_v2[siken_tag][year_tag].append(time_tag)
             except:
                 import traceback
                 traceback.print_exc()
@@ -145,11 +168,18 @@ for key, value in tqdm(result_json.items()):
 
             continue
     # 結果を返す
-    datas_dict[key] = {
+    datas_dict[year_tag] = {
         "time_tags": time_tags,
         "tags": tags,
         "siken_times": siken_times
     }
 
+# 情報を設定
+datas_dict_v2["time_tags"] = time_tags
+datas_dict_v2["tags"] = tags
+
 with open(os.path.join(extract_path, "datas.json"), "w", encoding="utf-8") as write_file:
     json.dump(datas_dict, write_file, ensure_ascii=False, indent=3)
+
+with open(os.path.join(extract_path, "datasv2.json"), "w", encoding="utf-8") as write_file:
+    json.dump(datas_dict_v2, write_file, ensure_ascii=False, indent=3)

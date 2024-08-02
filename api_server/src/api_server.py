@@ -4,8 +4,17 @@ load_dotenv()
 import os
 import json
 
+# 自身のディレクトリに移動
+try:
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+except:
+    pass
+
 with open("./datas/datas.json", "r", encoding="utf-8") as read_file:
     siken_datas = json.load(read_file)
+
+with open("./datas/datasv2.json", "r", encoding="utf-8") as read_file:
+    siken_datas_v2 = json.load(read_file)
 
 from fastapi import FastAPI,Request,HTTPException
 from fastapi.responses import JSONResponse
@@ -117,6 +126,10 @@ async def siken_times(year:str,sikentag:str,time_tag:str):
     # read_json["qslink"] = f"/app/qspdf/{year}/{sikentag}/{time_tag}"
 
     return read_json
+
+@app.get("/sikens")
+async def sikens():
+    return list(siken_datas_v2.keys())
 
 # @app.get("/qspdf/{year}/{sikentag}/{time_tag}")
 # async def siken_times(year:str,sikentag:str,time_tag:str):

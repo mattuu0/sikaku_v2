@@ -14,5 +14,5 @@ RUN pip install appwrite
 
 COPY ./src .
 
-CMD ["gunicorn","-k","uvicorn.workers.UvicornWorker ","api_server:app","--preload","--bind","0.0.0.0:3001"]
+# CMD ["gunicorn","-k","uvicorn.workers.UvicornWorker ","api_server:app","--preload","--bind","0.0.0.0:3001"]
 # gunicorn -k uvicorn.workers.UvicornWorker api_server:app --preload --bind 0.0.0.0:3001
