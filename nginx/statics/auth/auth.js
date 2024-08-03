@@ -11,8 +11,8 @@ function Start_Oauth() {
 // Go to OAuth provider login page
     account.createOAuth2Session(
         OAuthProvider.Microsoft, // provider
-        window.location.origin + "/statics/", // redirect here on success
-        window.location.href, // redirect here on failure
+        window.location.origin + "/statics/auth/success.html", // redirect here on success
+        window.location.origin + "/statics/auth/failure.html", // redirect here on failure
         [] // scopes (optional)
     );
 }
